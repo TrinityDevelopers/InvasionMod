@@ -34,6 +34,7 @@ class TextureAtlasTextureItem;
 class Color;
 class Entity;
 class Vec3;
+class EntityDamageSource;
 
 enum TextureFile {
 	FILE_TERRAIN,
@@ -184,16 +185,18 @@ public:
 public:
 	// Size : 140
 	//void **vtable;		// 0
-	char filler1[52];					//4
+	/*char filler1[56];					//4
 	bool _replaceable;					//56
-	AABB shape;							//60
-	TextureUVCoordinateSet tex;			//64
+	AABB shape;*/			//64
+	char filler0[24];
+	TextureUVCoordinateSet tex; //28
+	char filler1[36];
 	const TileID id;			//68
 	const SoundType* soundType;			//72
 	RenderLayer renderLayer;			//76
 	bool canBuildOver;					//80
 	int renderShape;					//84
-	TileType tileType;					//88
+	/*TileType tileType;					//88
 	TileEntityType tileEntityType;		//92
 	float thickness;					//96
 	bool canSlide;						//100
@@ -207,8 +210,8 @@ public:
 	bool fancy;							//128
 	char filler2[4];		//std::shared_ptr<TextureAtlas> _terrainTextureAtlas;  //132
 	unsigned int faceTextureIsotropic;	//136
-	std::string descriptionId;			//140
-
+	std::string descriptionId;*/			//140
+	char filler4[56];
 public:
 	Tile(int, Material const*);
 	Tile(int, TextureUVCoordinateSet, Material const*);
@@ -267,10 +270,10 @@ public:
 	virtual void playerDestroy(Player*, int, int, int, int); // 54
 	virtual bool canSurvive(TileSource*, int, int, int); // 55
 	virtual std::string getName() const; // 56
-	virtual std::string getDescriptionId() const; // 57
+	/*virtual std::string getDescriptionId() const; // 57
 	virtual std::string getDescriptionId(ItemInstance const*) const; // 58
 	virtual std::string getTypeDescriptionId(int); // 59
-	virtual void setDescriptionId(std::string const&); // 60
+	virtual void setDescriptionId(std::string const&);*/ // 60
 	virtual void triggerEvent(TileSource*, int, int, int, int, int); // 61
 	virtual TextureUVCoordinateSet getTextureNum(int); // 62
 	virtual void getMobToSpawn(TileSource&, TilePos const&) const; // 63
@@ -517,7 +520,7 @@ public:
     Mob(Level &);
 	Mob(TileSource &);
 	virtual ~Mob();
-	virtual void reset();
+	//virtual void reset();
 	virtual void lerpTo(float, float, float, float, float, int);
 	virtual void normalTick();
 	virtual void baseTick();
@@ -531,6 +534,7 @@ public:
 	virtual bool isOnFire() const;
 	virtual void hurt(Entity *, int);
 	virtual void animateHurt();
+	virtual void doFireHurt(int);
 	virtual void handleEntityEvent(char);
 	virtual int getEntityData();
 	virtual int getEntityData() const;
@@ -554,15 +558,18 @@ public:
 	virtual int getAmbientSoundInterval();
 	virtual void *getItemInHandIcon(const ItemInstance *, int); 
 	virtual float getBaseSpeed() = 0;
+	virtual float getJumpPower();
 	virtual void superTick();
 	virtual void heal(int);
 	virtual int getMaxHealth();
-	virtual void actuallyHurt(int);
+	virtual void actuallyHurt(int, EntityDamageSource*);
 	virtual float getArmorValue();
+	virtual bool isInvertedHealAndHarm();
 	virtual void pick(float, float, bool);
 	virtual void travel(float, float);
 	virtual void updateWalkAnim();
 	virtual void aiStep();
+	//virtual void pushEntities();
 	virtual void lookAt(Entity *, float, float);
 	virtual bool isLookingAtAnEntity();
 	virtual void beforeRemove();
@@ -587,7 +594,6 @@ public:
 	virtual void doHurtTarget(Entity *);
 	virtual bool canBeControlledByRider();
 	virtual void teleportTo(float, float, float);
-	virtual Color getOverlayColor(float);
 	virtual bool removeWhenFarAway();
 	virtual Item *getDeathLoot();
 	virtual void dropDeathLoot();
@@ -601,7 +607,8 @@ public:
 	virtual std::string getHurtSound();
 	virtual std::string getDeathSound();
 	virtual float getWalkingSpeedModifier();
-	virtual void getDamageAfterArmorAbsorb(int);
+	virtual int getDamageAfterArmorAbsorb(int);
+	virtual int getDamageAfterMagicAbsorb(int);
 	virtual void hurtArmor(int);
 	virtual bool useNewAi();
 	void _init();
@@ -831,10 +838,17 @@ public:
 	void setMaxDamage(int);
 };
 
+
 class TileItem : public Item {
 public:
 	char filler[84 - 76];
 	TileItem(int);
+	virtual TextureUVCoordinateSet getIcon(int, int, bool) const;
+	virtual float getIconYOffset() const;
+	virtual bool useOn(ItemInstance *, Player *, int, int, int, signed char, float, float, float);
+	virtual std::string getDescriptionId() const;
+	virtual std::string getDescriptionId(const ItemInstance *) const;
+	virtual bool isEmissive(int) const;
 };
 
 class BowItem : public Item {
