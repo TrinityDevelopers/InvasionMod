@@ -36,9 +36,6 @@ class Entity;
 class Vec3;
 class EntityDamageSource;
 class Brightness;
-namespace Touch {
-	class InventoryPane;
-}
 
 enum TextureFile {
 	FILE_TERRAIN,
@@ -912,19 +909,4 @@ public:
 
 	static Recipes* getInstance();
 	void addShapedRecipe(ItemInstance const&, std::vector<std::string> const&, std::vector<Recipes::Type> const&);
-};
-
-class CreativeInventoryScreen {
-public:
-	char filler[240];
-	const Touch::InventoryPane* categoryZeroPane;
-	char filler1[4];
-	const Touch::InventoryPane* categoryOnePane;
-	char filler2[4];
-	const Touch::InventoryPane* categoryTwoPane;
-	char filler3[4];
-	const Touch::InventoryPane* categoryThreePane;
-public:
-	CreativeInventoryScreen();
-	virtual void addItem(Touch::InventoryPane const*, int);
 };
