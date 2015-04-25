@@ -276,12 +276,8 @@ public:
 	virtual bool entityInside(TileSource*, int, int, int, Entity*); // 53
 	virtual void playerDestroy(Player*, int, int, int, int); // 54
 	virtual bool canSurvive(TileSource*, int, int, int); // 55
-	virtual std::string getName(ItemInstance const*) const; // 56
-	/*virtual std::string getDescriptionId() const; // 57
-	virtual std::string getDescriptionId(ItemInstance const*) const; // 58
-	virtual std::string getTypeDescriptionId(int); // 59
-	virtual void setDescriptionId(std::string const&);*/ // 60
 	virtual void setNameId(std::string const&);
+	virtual std::string getName(ItemInstance const*) const; // 56
 	virtual void triggerEvent(TileSource*, int, int, int, int, int); // 61
 	virtual TextureUVCoordinateSet getTextureNum(int); // 62
 	virtual void getMobToSpawn(TileSource&, TilePos const&) const; // 63
@@ -295,7 +291,6 @@ public:
 	virtual void setTicking(bool); // 71
 	virtual void getSpawnResourcesAuxValue(int); // 72
 	virtual void init(); // 73
-	//virtual bool isLiquidTile();
 	static void initTiles();
 	static Material *getTileMaterial(int);
 	static float getLightEmission(TileID);
@@ -828,12 +823,11 @@ public:
 	virtual bool isFood() const;
 	virtual bool isSeed() const;
 	virtual bool isArmor() const;
+	virtual bool isDye() const;
 	virtual bool isLiquidClipItem(int) const;
+	virtual bool requiresInteract() const;
+	virtual std::string getInteractText() const;
 	virtual std::string getName(const ItemInstance *) const;
-	/*virtual std::string getDescription() const;
-	virtual std::string getDescription(const ItemInstance *) const;
-	virtual std::string getDescriptionId() const;
-	virtual std::string getDescriptionId(const ItemInstance *) const;*/
 	virtual void setNameID(const std::string &);
 	virtual bool isEmissive(int) const;
 	virtual void *getAnimationFrameFor(Mob &) const; 
@@ -841,6 +835,7 @@ public:
 	static void initCreativeItems();
 	static void addCreativeItem(Item*, short);
 	static void addCreativeItem(Tile*, short);
+	static void addCreativeItem(short, short);
 	static TextureAtlasTextureItem getTextureItem(const std::string &);
 	static TextureUVCoordinateSet getTextureUVCoordinateSet(const std::string &, int);
 	static ItemInstance getIDByName(const std::string &, bool);

@@ -18,7 +18,7 @@ static void(*Gui_render_real)(Gui*, float, bool, int, int);
 static void(*Tile_initTiles_real)();
 static void(*Item_initCreativeItems_real)();
 static void(*TileTessellator_tessellateBlockInWorld_real)(TileTessellator*, Tile*, const TilePos&);
-//std::map <std::string, std::string>* I18n_strings;
+std::map <std::string, std::string>* I18n_strings;
 
 static void addShapedRecipe(int id, int count, int damage, std::string line1, std::string line2, std::string line3, int ingCount, char charArray[], int idArray[]) {
 	std::vector<std::string> shape={ line1, line2, line3};
@@ -44,8 +44,8 @@ static void Minecraft_selectLevel_hook(Level* level, Minecraft* mc, std::string 
 	Item::items[ALIEN_SPAWNER_ID]=alienSpawner;
 	if(!reg) {
 		reg=true;
-	    //(*I18n_strings)["item.Alien Spawner.name"]="Spawn Alien Villager";
-		//(*I18n_strings)["tile.Glowstone Torch.name"]="Glowstone Torch";
+	    (*I18n_strings)["item.alienSpawner.name"]="Spawn Alien Villager";
+		(*I18n_strings)["tile.glowstoneTorch.name"]="Glowstone Torch";
 		char gtChars[]={'g', 's'};
 	    int gtIngs[]={348, 280};
 	    addShapedRecipe(GLOWSTONE_TORCH_ID, 4, 0, "  ", " g ", " s ", 2, gtChars, gtIngs);
@@ -66,7 +66,7 @@ static void Gui_render_hook(Gui* gui, float f1, bool b1, int i1, int i2) {
 static void Item_initCreativeItems_hook() {
 	Item_initCreativeItems_real();
 	Item::addCreativeItem(Tile::tiles[GLOWSTONE_TORCH_ID], 0);
-	Item::addCreativeItem(Item::items[ALIEN_SPAWNER_ID], 0);
+	//Item::addCreativeItem(Item::items[ALIEN_SPAWNER_ID], 0);
 }
 
 static void TileTessellator_tessellateBlockInWorld_hook(TileTessellator* tess, Tile* tile, TilePos const& pos) {
@@ -78,7 +78,7 @@ static void TileTessellator_tessellateBlockInWorld_hook(TileTessellator* tess, T
 }
 
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-	//I18n_strings = (std::map <std::string, std::string>*) dlsym(RTLD_DEFAULT, "_ZN4I18n8_stringsE");
+	I18n_strings = (std::map <std::string, std::string>*) dlsym(RTLD_DEFAULT, "_ZN4I18n8_stringsE");
 	MSHookFunction((void*) &Gui::render, (void*) &Gui_render_hook, (void**) &Gui_render_real);
     MSHookFunction((void*) &Minecraft::selectLevel, (void*) &Minecraft_selectLevel_hook, (void**) &Minecraft_selectLevel_real);
     MSHookFunction((void*) &Tile::initTiles, (void*) &Tile_initTiles_hook, (void**) &Tile_initTiles_real);
