@@ -2,11 +2,11 @@
 #include "mcpe/level/TileSource.h"
 
 GlowstoneTorch::GlowstoneTorch(int id, std::string const& desc) : Tile(id, "glowstone_torch",&Material::decoration) {
-	this->setDescriptionId(desc);
+	this->setNameId(desc);
 	this->setTicking(true);
 	this->setLightEmission(0.85F);
 	this->setCategory(3);
-	this->renderShape =  2;
+	this->renderShape =  110;
 	Tile::tiles[id] = this;
 	Tile::solid[id] = false;
 }
@@ -63,8 +63,4 @@ void GlowstoneTorch::onPlace(TileSource* ts, int x, int y, int z) {
 
 void GlowstoneTorch::tick(TileSource* ts, int x, int y, int z, Random* rand) {
 	return Tile::torch->tick(ts, x, y, z, rand);
-}
-
-void GlowstoneTorch::handleEntityInside(TileSource* ts, int x, int y, int z, Entity* entity, Vec3& vec3) {
-	
 }

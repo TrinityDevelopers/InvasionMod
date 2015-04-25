@@ -35,6 +35,10 @@ class Color;
 class Entity;
 class Vec3;
 class EntityDamageSource;
+class Brightness;
+namespace Touch {
+	class InventoryPane;
+}
 
 enum TextureFile {
 	FILE_TERRAIN,
@@ -50,17 +54,20 @@ public:
 
 class TextureUVCoordinateSet {
 public:
-	float startX;		// 0
-	float startY;		// 4
-	float endX;			// 8
-	float endY;			// 12
+	float minU;		// 0
+	float minV;		// 4
+	float maxU;			// 8
+	float maxV;			// 12
 	float width;		// 16
 	float height;		// 20
 	int i1;				// 24
 	TextureFile type;	// 28
 public:
 	TextureUVCoordinateSet(float, float, float, float, float, float, int, TextureFile);
-	TextureUVCoordinateSet();
+	TextureUVCoordinateSet(float, float, float, float, int, int);
+	void setUV(float, float, float, float);
+	float getInterpolatedU(float);
+	float getInterpolatedV(float);
 	void fix();
 };
 
@@ -187,10 +194,10 @@ public:
 	//void **vtable;		// 0
 	/*char filler1[56];					//4
 	bool _replaceable;					//56
-	AABB shape;*/			//64
+	AABB shape;			//64
 	char filler0[24];
-	TextureUVCoordinateSet tex; //28
-	char filler1[36];
+	TextureUVCoordinateSet tex;*/ //28
+	char filler1[64];
 	const TileID id;			//68
 	const SoundType* soundType;			//72
 	RenderLayer renderLayer;			//76
@@ -215,7 +222,7 @@ public:
 public:
 	Tile(int, Material const*);
 	Tile(int, TextureUVCoordinateSet, Material const*);
-	Tile(int, std::string, Material const*);
+	Tile(int, std::string const&, Material const*);
 	virtual ~Tile(); // 2
 	virtual void onFertilized(TileSource*, int, int, int); // 4
 	virtual void getShape(TileSource*, int, int, int, AABB&, bool); // 5
@@ -269,18 +276,19 @@ public:
 	virtual bool entityInside(TileSource*, int, int, int, Entity*); // 53
 	virtual void playerDestroy(Player*, int, int, int, int); // 54
 	virtual bool canSurvive(TileSource*, int, int, int); // 55
-	virtual std::string getName() const; // 56
+	virtual std::string getName(ItemInstance const*) const; // 56
 	/*virtual std::string getDescriptionId() const; // 57
 	virtual std::string getDescriptionId(ItemInstance const*) const; // 58
 	virtual std::string getTypeDescriptionId(int); // 59
 	virtual void setDescriptionId(std::string const&);*/ // 60
+	virtual void setNameId(std::string const&);
 	virtual void triggerEvent(TileSource*, int, int, int, int, int); // 61
 	virtual TextureUVCoordinateSet getTextureNum(int); // 62
 	virtual void getMobToSpawn(TileSource&, TilePos const&) const; // 63
 	virtual int getIconYOffset() const; // 64
 	virtual void setShape(float, float, float, float, float, float); // 65
 	virtual void setSoundType(Tile::SoundType const&); // 66
-	virtual void setLightBlock(int); // 67
+	virtual void setLightBlock(Brightness); // 67
 	virtual void setLightEmission(float); // 68
 	virtual void setExplodeable(float); // 69
 	virtual void setDestroyTime(float); // 70
@@ -793,7 +801,7 @@ public:
 	Item(int);
 	virtual ~Item();
 	virtual int getMaxStackSize(const ItemInstance *);
-	virtual void setMaxStackSize(int);
+	virtual void setMaxStackSize(unsigned char);
 	virtual bool canBeDepleted();
 	virtual TextureUVCoordinateSet getIcon(int, int, bool) const;
 	virtual float getIconYOffset() const;
@@ -822,14 +830,17 @@ public:
 	virtual bool isArmor() const;
 	virtual bool isLiquidClipItem(int) const;
 	virtual std::string getName(const ItemInstance *) const;
-	virtual std::string getDescription() const;
+	/*virtual std::string getDescription() const;
 	virtual std::string getDescription(const ItemInstance *) const;
 	virtual std::string getDescriptionId() const;
-	virtual std::string getDescriptionId(const ItemInstance *) const;
-	virtual void setDescriptionId(const std::string &);
+	virtual std::string getDescriptionId(const ItemInstance *) const;*/
+	virtual void setNameID(const std::string &);
 	virtual bool isEmissive(int) const;
 	virtual void *getAnimationFrameFor(Mob &) const; 
 	static void initItems();
+	static void initCreativeItems();
+	static void addCreativeItem(Item*, short);
+	static void addCreativeItem(Tile*, short);
 	static TextureAtlasTextureItem getTextureItem(const std::string &);
 	static TextureUVCoordinateSet getTextureUVCoordinateSet(const std::string &, int);
 	static ItemInstance getIDByName(const std::string &, bool);
@@ -906,4 +917,19 @@ public:
 
 	static Recipes* getInstance();
 	void addShapedRecipe(ItemInstance const&, std::vector<std::string> const&, std::vector<Recipes::Type> const&);
+};
+
+class CreativeInventoryScreen {
+public:
+	char filler[240];
+	const Touch::InventoryPane* categoryZeroPane;
+	char filler1[4];
+	const Touch::InventoryPane* categoryOnePane;
+	char filler2[4];
+	const Touch::InventoryPane* categoryTwoPane;
+	char filler3[4];
+	const Touch::InventoryPane* categoryThreePane;
+public:
+	CreativeInventoryScreen();
+	virtual void addItem(Touch::InventoryPane const*, int);
 };

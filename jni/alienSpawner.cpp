@@ -3,7 +3,7 @@
 
 AlienSpawner::AlienSpawner(int id, std::string const& name, int maxStack) : Item(id) {
 	this->setIcon("alien_spawner", 0);
-	this->setDescriptionId(name);
+	this->setNameID(name);
 	this->setMaxStackSize(maxStack);
 	this->handEquipped();
 	this->setCategory(3);

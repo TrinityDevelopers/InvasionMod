@@ -18,7 +18,6 @@ public:
 	virtual void neighborChanged(TileSource*, int, int, int, int, int, int);
 	virtual void onPlace(TileSource*, int, int, int);
 	virtual void tick(TileSource*, int, int, int, Random*);
-	virtual void handleEntityInside(TileSource*, int, int, int, Entity*, Vec3&);
 };
 
 #endif
