@@ -177,12 +177,12 @@ public:
 
 	static SoundType SOUND_SILENT, SOUND_SAND, SOUND_CLOTH, SOUND_GLASS, SOUND_METAL, SOUND_STONE, SOUND_GRASS, SOUND_GRAVEL, SOUND_WOOD, SOUND_NORMAL;
 
-	static bool shouldTick[255];
-	static float translucency[255];
-	static bool solid[255];
-	static float lightEmission[255];
-	static int lightBlock[255];
-	static Tile *tiles[255];
+	static bool shouldTick[256];
+	static float translucency[256];
+	static bool solid[256];
+	static float lightEmission[256];
+	static int lightBlock[256];
+	static Tile *tiles[256];
 	static TextureAtlas *_terrainTextureAtlas;
 	static const char *TILE_DESCRIPTION_PREFIX;
 
@@ -788,7 +788,7 @@ public:
 
 	char filler_item[76];
 public:
-    static Item* items[512];
+    static Item* items[256];
     static TextureAtlas *_itemTextureAtlas;
 	Item(int);
 	virtual ~Item();
