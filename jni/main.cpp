@@ -41,14 +41,13 @@ static void addShapedRecipe(int id, int count, int damage, std::string line1, st
 
 static void Minecraft_selectLevel_hook(Level* level, Minecraft* mc, std::string const& str1, std::string const& str2, LevelSettings const& settings) {
 	AlienSpawner* alienSpawner=new AlienSpawner(ALIEN_SPAWNER_ID-0x100, "alienSpawner", 64);
-	Item::items[ALIEN_SPAWNER_ID]=alienSpawner;
 	if(!reg) {
 		reg=true;
 	    (*I18n_strings)["item.alienSpawner.name"]="Spawn Alien Villager";
 		(*I18n_strings)["tile.glowstoneTorch.name"]="Glowstone Torch";
-		char gtChars[]={'g', 's'};
-	    int gtIngs[]={348, 280};
-	    addShapedRecipe(GLOWSTONE_TORCH_ID, 4, 0, "  ", " g ", " s ", 2, gtChars, gtIngs);
+		//char gtChars[]={'g', 's'};
+	    //int gtIngs[]={348, 280};
+	    //addShapedRecipe(GLOWSTONE_TORCH_ID, 4, 0, "  ", " g ", " s ", 2, gtChars, gtIngs);
 	}
 	Minecraft_selectLevel_real(level, mc, str1, str2, settings);
 }
