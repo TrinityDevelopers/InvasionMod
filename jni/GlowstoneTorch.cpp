@@ -7,6 +7,7 @@ GlowstoneTorch::GlowstoneTorch(int id, std::string const& desc) : Tile(id, "glow
 	this->setLightEmission(0.85F);
 	this->setCategory(3);
 	this->renderShape =  110;
+	this->setSoundType(Tile::SOUND_WOOD);
 	Tile::tiles[id] = this;
 	Tile::solid[id] = false;
 }
@@ -25,6 +26,9 @@ bool GlowstoneTorch::checkCanSurvive(TileSource* ts, int x, int y, int z) {
 			this->spawnResources(ts, x, y, z, ts->getData(x, y, z), 0.0F);
 			ts->setTile(x, y, z, Tile::tiles[0]->id, 3);
 		}
+		return false;
+	} else {
+		return true;
 	}
 }
 

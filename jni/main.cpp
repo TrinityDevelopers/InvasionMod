@@ -14,10 +14,11 @@ bool reg=false;
 bool itemsAdded=false;
 
 static void (*Minecraft_selectLevel_real)(Level*, Minecraft*, std::string const&, std::string const&, LevelSettings const&);
-static void(*Gui_render_real)(Gui*, float, bool, int, int);
-static void(*Tile_initTiles_real)();
-static void(*Item_initCreativeItems_real)();
-static void(*TileTessellator_tessellateInWorld_real)(TileTessellator*, Tile*, const TilePos&, bool);
+static void (*Gui_render_real)(Gui*, float, bool, int, int);
+static void (*Item_initItems_real)();
+static void (*Tile_initTiles_real)();
+static void (*Item_initCreativeItems_real)();
+static void (*TileTessellator_tessellateInWorld_real)(TileTessellator*, Tile*, const TilePos&, bool);
 static std::string (*I18n_get_real)(std::string const&,std::vector<std::string,std::allocator<std::string>> const&);
 
 static void addShapedRecipe(int id, int count, int damage, std::string line1, std::string line2, std::string line3, int ingCount, char charArray[], int idArray[]) {
@@ -40,15 +41,19 @@ static void addShapedRecipe(int id, int count, int damage, std::string line1, st
 }
 
 static void Minecraft_selectLevel_hook(Level* level, Minecraft* mc, std::string const& str1, std::string const& str2, LevelSettings const& settings) {
-	AlienSpawner* alienSpawner=new AlienSpawner(ALIEN_SPAWNER_ID-0x100, "alienSpawner", 64);
-	if(!reg) {
+	/*if(!reg) {
 		reg=true;
-		//char gtChars[]={'g', 's'};
-	    //int gtIngs[]={348, 280};
-	    //addShapedRecipe(GLOWSTONE_TORCH_ID, 4, 0, "  ", " g ", " s ", 2, gtChars, gtIngs);
-	}
+		char gtChars[]={'g', 's'};
+	    int gtIngs[]={348, 280};
+	    addShapedRecipe(GLOWSTONE_TORCH_ID, 4, 0, "  ", " g ", " s ", 2, gtChars, gtIngs);
+	}*/
 	Minecraft_selectLevel_real(level, mc, str1, str2, settings);
 }
+
+static void Item_initItems_hook() {
+	Item_initItems_real();
+	AlienSpawner* alienSpawner = new AlienSpawner(ALIEN_SPAWNER_ID-0x100, "alienSpawner", 64);;
+};
 
 static void Tile_initTiles_hook() {
 	Tile_initTiles_real();
@@ -62,8 +67,8 @@ static void Gui_render_hook(Gui* gui, float f1, bool b1, int i1, int i2) {
 
 static void Item_initCreativeItems_hook() {
 	Item_initCreativeItems_real();
-	Item::addCreativeItem(Tile::tiles[GLOWSTONE_TORCH_ID], 0);
 	Item::addCreativeItem(Item::items[ALIEN_SPAWNER_ID], 0);
+	Item::addCreativeItem(Tile::tiles[GLOWSTONE_TORCH_ID], 0);
 }
 
 static void TileTessellator_tessellateInWorld_hook(TileTessellator* tess, Tile* tile, TilePos const& pos, bool b1) {
@@ -88,6 +93,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	void* I18n_get = dlsym(RTLD_DEFAULT, "_ZN4I18n3getERKSsRKSt6vectorISsSaISsEE");
 	MSHookFunction((void*) &Gui::render, (void*) &Gui_render_hook, (void**) &Gui_render_real);
     MSHookFunction((void*) &Minecraft::selectLevel, (void*) &Minecraft_selectLevel_hook, (void**) &Minecraft_selectLevel_real);
+	MSHookFunction((void*) &Item::initItems, (void*) &Item_initItems_hook, (void**) &Item_initItems_real);
     MSHookFunction((void*) &Tile::initTiles, (void*) &Tile_initTiles_hook, (void**) &Tile_initTiles_real);
 	MSHookFunction((void*) &Item::initCreativeItems, (void*) &Item_initCreativeItems_hook, (void**) &Item_initCreativeItems_real);
 	MSHookFunction((void*) &TileTessellator::tessellateInWorld, (void*) &TileTessellator_tessellateInWorld_hook, (void**) &TileTessellator_tessellateInWorld_real);

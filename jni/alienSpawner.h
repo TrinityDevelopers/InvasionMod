@@ -1,7 +1,7 @@
 #ifndef ALIENSPAWNER_H_
 #define ALIENSPAWNER_H_
 
-#define ALIEN_SPAWNER_ID 500
+#define ALIEN_SPAWNER_ID 505
 
 #include <lw.h>
 

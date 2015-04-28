@@ -828,11 +828,11 @@ public:
 	virtual void setNameID(const std::string &);
 	virtual bool isEmissive(int) const;
 	virtual void *getAnimationFrameFor(Mob &) const; 
-	static void initItems();
+	static void addCreativeItem(short,short);
+	static void addCreativeItem(Tile *,short);
+	static void addCreativeItem(Item *,short);
 	static void initCreativeItems();
-	static void addCreativeItem(Item*, short);
-	static void addCreativeItem(Tile*, short);
-	static void addCreativeItem(short, short);
+	static void initItems();
 	static TextureAtlasTextureItem getTextureItem(const std::string &);
 	static TextureUVCoordinateSet getTextureUVCoordinateSet(const std::string &, int);
 	static ItemInstance getIDByName(const std::string &, bool);
